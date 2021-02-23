@@ -87,6 +87,13 @@ fun main(args : Array<String>) {
     val newGSMFile = headerBytes + GSMCipheredFile
 
     writeToFile(newGSMFile, "betterencryption")
+
+
+    /***
+    It is quite clear that ECB mode is not safe, since it will encrypt identical pieces of plaintext in the same manner. GCM mode uses a IV that "counts", in such a manner that the same IV is never used twice.
+    At least, we can say that ECB leaks a lot, GCM does not leak.
+
+     ***/
 }
 fun writeToFile(array: ByteArray?, name : String ) {
 
