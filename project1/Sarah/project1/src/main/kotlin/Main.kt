@@ -9,6 +9,23 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 
+/*  I am in a group with David Martin Carl and Ask Harup Sejsbo,
+    and we are called the Indistinguishable */
+
+
+/**************************   Answer for (d)   **************************/
+
+/*  If we look at the image results of each encryption scheme, we
+    see that using AES with ECB mode, padded with PKCS7, the orig-
+    inal image is slightly visible, whereas with the AES encryption
+    /decryption in GCM-mode with a tag length of 128 bits and an
+    initialization vector of 12 bytes length, the images does not
+    reveal any information of the original image.
+
+    Therefore, the latter scheme is the best implementation for
+    Bob’s remote backup. */
+
+
 class Main {
 
 }
@@ -82,24 +99,25 @@ fun main() {
     // defining provider Bouncy Castle
     Security.addProvider(BouncyCastleFipsProvider())
 
+
+
+    /**************************   Answer for (b)   **************************/
+
     // loading files for encryption
     val msg = File("src/main/resources/data/msg").readBytes()
     val img = File("src/main/resources/data/screenshot.bmp").readBytes()
-
-
-    // testing reading the msg file
-    val file = File("src/main/resources/data/msg")
-    val bufferedReader = file.bufferedReader()
-    val msgStr = bufferedReader.readLines()[0]
-
 
     // using AES encryption with ECB mode and PKCS7 padding on string from file
     val (encStr, keyStr) = encryptAESECBPKCS7(msg)
     val decStr = String(decryptAESECBPKCS7(encStr, keyStr))
 
-    println("Original message: $msgStr")
-    println("Encrypted message: $encStr")
-    println("Decrypted message: $decStr")
+    // testing reading the msg file
+    val msgStr = String(msg)
+    val encHex = Hex.toHexString(encStr)
+
+    println("Original  message of b.i: $msgStr")
+    println("Encrypted message of b.i: $encHex")
+    println("Decrypted message of b.i: $decStr")
 
 
     // preprocessing image
@@ -119,10 +137,13 @@ fun main() {
     File("src/main/resources/data/screenshot_dec_ecb.bmp").writeBytes(fullImgDecEBC)
 
 
+
+    /**************************   Answer for (c)   **************************/
+
     // using AES decryption with GCM mode using data from file
     val (secretKey, secretIV, secretDec) = readDataFromFile("src/main/resources/data/secret")
     val secret = String(decryptAESGCM(secretDec, secretKey, secretIV))
-    println("The secret string is: $secret")
+    println("\nThe secret string of question c.i is: $secret")
 
 
     // using AES encryption with GCM mode on image
