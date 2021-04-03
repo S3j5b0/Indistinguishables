@@ -14,7 +14,13 @@ class main {
 fun main(args: Array<String>) {
 
 
+        val q = "000sa333ddd"
 
+
+        val n = q.trimStart{x -> x == '0' }
+        println(n)
+
+    
     val s = "00b44a0bc6303782b729a7f9b44a3611b247ddf1e544f8b1"+
     "420e2aae976003219175461d2bd76e64ba657d7c9dff6ed7"+
             "b17980778ec0cbf75fc16e52463e2d784f5f20c1691f17cd"+
@@ -92,23 +98,23 @@ val share_1 = "009aca2ca92b1e95bfad348c9014c6adc00d18d29fd5f891" +
             "fad290d3f5ef79403025d2ead3ae2f77cc054f4dbc3a5183"+
     "d31eeb8626c00512769ad03092f0b2f256fc2b2f8b62506"+
     "59e656c1569d96b164d7e0908f84e99e728"
-    val share_4 = "2131de2d5f973cd76289fe88dfe2cd9e8196b7cfb26b8793" +
-            "fb3afa5bc0b965441878cf300f1a39db3525dc4881a4b465" +
-    "4bf648b6b812e202d0ea3e7654fe02cadc68f72978093eee" +
-            "3731ecd0ff1f7b32e52de1d9e7575315112cbe693205a089"+
-            "0ae8a2fe33610e9097ce3c7f819113315686179c226df4be"+
-            "a68cca4e466fcf4ca343fa60019ca4914acedc84df0e12c8"+
-    "ad4a3d5590f51e321a7f3528dfb7939241e1377c632e9138"+
-    "13ac02757d899a19c10900fdd4ed24d1affc0249b3fdd93d"+
-            "f4de4f229dffa039af1589f5fe87cf7594cc8379f364a643"+
-    "34ecc165aa650cf81edc2fd1791b95128926c9be25b94e60"+
-            "fad290d3f5ef79403025d2ead3ae2f77cc054f4dbc3a5183"+
-    "d31eeb8626c00512769ad03092f0b2f256fc2b2f8b625065"+
-   "9e656c1569d96b164d7e0908f84e99e728"
+    val share_4 = "71da02f27e8f8f82fc996469dc254f81b4db7718ca8bc4fe" +
+            "86f6700424c9527db41c2403b69ea80fb2902fa720983929" +
+            "691c81b88a7c5bf830b5153d749327b9a80422f2a61cd51b" +
+            "5c5c7568a059ab38660f135e05ba62a5e6014d3f0ce4b052" +
+            "2b81df3231b111c06199faa7cff0387981dd35cc62ea6a45" +
+            "1d2c0b12b39f6676adbe82058c3cb4847856477f8f93962c" +
+            "4c10fc5fb62906d95bcb7aad486b564d8c3f50cbeb2d21b6" +
+            "aa0e8e46d03b9ba75b1adf4fa9d41ca32e977fbdafadaa4f" +
+            "38f20020d30c5f26e30ac1ad56993bc246c06fd0bcbb12e5" +
+            "40b1fa6292ba403f45f03f9cf446ac4a37bb4aa180a3f262" +
+            "466d3129fccca216c1521143cabc818dda793ce26b3b700c" +
+            "3b15cd648193771e797863f7782e6b460d593c92b15a90c8" +
+            "43d9d09f65ff1b25cda9b758baa456fe15"
 
-    val arg1 = Pair(1.0.toBigDecimal(), StoBigDec(share_1))
-    val arg2 = Pair(2.0.toBigDecimal(), StoBigDec(share_2))
-    val arg3 = Pair(3.0.toBigDecimal(), StoBigDec(share_4))
+    val arg1 = Pair(2.0.toBigDecimal(), StoBigDec(share_1))
+    val arg2 = Pair(3.0.toBigDecimal(), StoBigDec(share_2))
+    val arg3 = Pair(5.0.toBigDecimal(), StoBigDec(share_4))
 
     val reconstructedFunction =
         lagrange(arg1,arg2,arg3)
@@ -164,7 +170,7 @@ fun StoBigDec(field: String) : BigDecimal{
 fun bigInttoS(bigInt : BigInteger) : String{
     val backtoB = bigInt.toByteArray()
 
-   return Hex.toHexString(backtoB)
+   return Hex.toHexString(backtoB).trimStart{x -> x == '0'}
 
 }
 
