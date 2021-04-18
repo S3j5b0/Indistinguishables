@@ -14,11 +14,6 @@ class main {
 fun main(args: Array<String>) {
 
 
-        val q = "000sa333ddd"
-
-
-        val n = q.trimStart{x -> x == '0' }
-        println(n)
 
     
     val s = "00b44a0bc6303782b729a7f9b44a3611b247ddf1e544f8b1"+
@@ -36,39 +31,6 @@ fun main(args: Array<String>) {
     "498cce02d4e794915f8a4208de3eaf9fbff5"
 
 
-
-    // getting an integer representation of the secret
-    val S = StoBigInt(s)
-    val rand : Random = Random()
-    // Full disclosure: we had no idea how we should pick a field. Unless we should split our scheme into many smaller polynomials,
-    // we had to pick a field larger than S. This is how we ended up doing it
-    val field = (S.toBigDecimal() * (rand.nextInt(3)+1 + rand.nextDouble()).toBigDecimal()).toBigInteger()
-
-    // I now create the scheme from our input string:
-    // a and b are chosen as random values between 0-10. This is an rather arbitrary choice also, as I couldnt find anything about
-    // it anywhere
-    println("Secret as integer: "  + S)
-    val scheme = QuadraticScheme(s, field)
-    // generating my own random shares:
-    println("__________________________________________")
-    val shares = scheme.generateRandomShares(5, 5)
-    println("Generating shares:")
-    println(shares.forEach{x -> println("element:" + x)})
-
-    println("__________________________________________")
-
-    // Now we try to reconstruct our function
-
-    val reconstructedPolyFunc = lagrange(shares[0], shares[1], shares[2])
-    val reconstructedSecret = reconstructedPolyFunc.invoke(0.0.toBigDecimal(), field.toBigDecimal()).toBigInteger()
-    println(S)
-    println(reconstructedSecret)
-    if (reconstructedSecret == S){
-        println("reconstructing was a success!")
-    } else {
-        println("reconstructing was a failure, such dissapointment :( ")
-
-    }
 // Now i'll try to recreate a secret from the shares that I am given
 
 
@@ -119,11 +81,19 @@ val share_1 = "009aca2ca92b1e95bfad348c9014c6adc00d18d29fd5f891" +
     val reconstructedFunction =
         lagrange(arg1,arg2,arg3)
 
+    val reconsDynaFunc = lagrangeDyna(listOf(arg1, arg2, arg3))
+
+
+    val inptArr = arrayOf(arg1,arg2,arg3)
+
     val foundSecret = reconstructedFunction(0.0.toBigDecimal(), StoBigDec(s))
+    val altRes = reconsDynaFunc(0.0.toBigDecimal(), StoBigDec(s))
     println("__________________________________________")
 
     println("secret reconstructed as: ")
     println(foundSecret)
+    println("dynamic solution: ")
+    println(altRes)
     println("and as a string:")
     println(bigInttoS(foundSecret.toBigInteger()))
 }
@@ -205,6 +175,35 @@ val quadFunc = quadratic(a,b,c, field)
 
 }
 
+fun lagrangeDyna(points : List<Pair<BigDecimal, BigDecimal>>) : (BigDecimal, BigDecimal) -> BigDecimal{ //  : List<(BigDecimal) -> BigDecimal>
+    fun reduceSingle( x : BigDecimal,currentIdx : Int ) : BigDecimal{
+        val top = points.foldRightIndexed(1.0.toBigDecimal()) {idx, item, acc -> if (idx == currentIdx) acc else {
+            acc * (x - item.first)
+        }}
+        val bottom = points.foldRightIndexed(1.0.toBigDecimal()){idx, item, acc -> if (idx == currentIdx) acc else {
+            acc * (points[currentIdx].first - item.first)
+        }}
+        return top/bottom
+    }
+
+
+    val funcs =  points.map <Pair<BigDecimal, BigDecimal>, (BigDecimal) -> BigDecimal> { pair  -> {
+            x ->
+                    reduceSingle(x, points.indexOf(pair)) * pair.second
+    }
+    }
+
+    return { x, field -> 
+        val res = funcs.fold(0.0.toBigDecimal()){acc, func -> func(x) + acc}
+        if (res < 0.0.toBigDecimal()){
+            (res % field) + field}
+        else {
+            res % field
+        }
+    }
+
+}
+
 fun lagrange(cord0 : Pair<BigDecimal,BigDecimal>,cord1 : Pair<BigDecimal,BigDecimal>,cord2 : Pair<BigDecimal,BigDecimal>) : (BigDecimal, BigDecimal) -> BigDecimal{
     val L0: (BigDecimal) -> BigDecimal = { x -> ((x - cord1.first)*(x - cord2.first)) / ((cord0.first - cord1.first)*(cord0.first - cord2.first))}
     val L1: (BigDecimal) -> BigDecimal = { x -> ((x - cord0.first)*(x - cord2.first)) / ((cord1.first - cord0.first)*(cord1.first - cord2.first))}
@@ -221,27 +220,5 @@ fun lagrange(cord0 : Pair<BigDecimal,BigDecimal>,cord1 : Pair<BigDecimal,BigDeci
 }
 
 
-/*
-fun reconstruct(pairs : List<Pair<Double, Double>>, field: Int) : Double {
-    val (xs, ys) = pairs.toList().unzip()
-    var res = 0.0
-    for (i in ys.indices) {
-        res += (ys[i] * lagrange(xs, i))
-    }
-    return if (res < 0.0) {
-        println("res < 0.0: "  + res)
-        (res % field) + field
-    } else{
-        println("res > 0.0: " + res)
-        res % field
-}}
 
-fun lagrange(xs : List<Double>, i: Int) : Double {
-    var res = 1.0
-    for (j in xs.indices) {
-        if (i == j) continue
-        res *= (0 - xs[j]) / (xs[i] - xs[j])
-    }
-    return res
-}*/
 
