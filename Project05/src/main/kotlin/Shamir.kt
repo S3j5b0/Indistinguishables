@@ -8,12 +8,12 @@ import java.util.*
 
 
 
-class shamir {
+class Shamir {
 
     /**
      * Generate random coefficients for the polynomial.
      */
-    fun genCoeff(field: BigInteger, sR: SecureRandom): BigInteger {
+    private fun genCoeff(field: BigInteger, sR: SecureRandom): BigInteger {
         val fN = field.bitLength()
         // Get a random big integer using the given random number generator and with the given bit length.
         // We use the bit length of the field to get a similar sized coefficient.
@@ -66,27 +66,27 @@ class shamir {
 
         return shares
     }
-    fun lagrangeDyna(points : List<Pair<BigDecimal, BigDecimal>>) : (BigDecimal, BigDecimal) -> BigDecimal{ //  : List<(BigDecimal) -> BigDecimal>
-        fun reduceSingle( x : BigDecimal,currentIdx : Int ) : BigDecimal{
-            val top = points.foldRightIndexed(1.0.toBigDecimal()) {idx, item, acc -> if (idx == currentIdx) acc else {
+    fun lagrangeDyna(points : List<Pair<BigInteger, BigInteger>>) : (BigInteger, BigInteger) -> BigInteger{ //  : List<(BigDecimal) -> BigDecimal>
+        fun reduceSingle( x : BigInteger,currentIdx : Int ) : BigInteger{
+            val top = points.foldRightIndexed(1.toBigInteger()) {idx, item, acc -> if (idx == currentIdx) acc else {
                 acc * (x - item.first)
             }}
-            val bottom = points.foldRightIndexed(1.0.toBigDecimal()){idx, item, acc -> if (idx == currentIdx) acc else {
+            val bottom = points.foldRightIndexed(1.toBigInteger()){idx, item, acc -> if (idx == currentIdx) acc else {
                 acc * (points[currentIdx].first - item.first)
             }}
             return top/bottom
         }
 
 
-        val funcs =  points.map <Pair<BigDecimal, BigDecimal>, (BigDecimal) -> BigDecimal> { pair  -> {
+        val funcs =  points.map <Pair<BigInteger, BigInteger>, (BigInteger) -> BigInteger> { pair  -> {
                 x ->
             reduceSingle(x, points.indexOf(pair)) * pair.second
         }
         }
 
         return { x, field ->
-            val res = funcs.fold(0.0.toBigDecimal()){acc, func -> func(x) + acc}
-            if (res < 0.0.toBigDecimal()){
+            val res = funcs.fold(0.toBigInteger()){acc, func -> func(x) + acc}
+            if (res < 0.toBigInteger()){
                 (res % field) + field}
             else {
                 res % field

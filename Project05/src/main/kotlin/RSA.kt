@@ -4,7 +4,29 @@ import java.security.PrivateKey
 import java.security.PublicKey
 import javax.crypto.Cipher
 
+import org.bouncycastle.asn1.eac.RSAPublicKey
+
+import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider
+import org.bouncycastle.util.encoders.Base64
+import org.bouncycastle.util.encoders.Hex
+import java.io.*;
+import java.security.*;
+import java.security.spec.*;
+import javax.crypto.*;
+
+import java.security.spec.PKCS8EncodedKeySpec
+
+import java.security.spec.EncodedKeySpec
+import java.security.spec.X509EncodedKeySpec
+
+import java.security.KeyFactory
+import java.util.Base64.getDecoder
+
 class RSA {
+    constructor() {
+        Security.addProvider(BouncyCastleFipsProvider())
+    }
+
 
 
     fun generateKey(n: Int): KeyPair {
