@@ -16,7 +16,7 @@ data class Share(val idx: Int, val secret: BigInteger)
 // TODO: Get the corresponding keystore here
 // Should be done here
 fun getKeyStore(keystore: String, password: String): KeyStore {
-    val store: KeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+    val store: KeyStore = KeyStore.getInstance("JKS");
     store.load(keystore.byteInputStream(), password.toCharArray())
     return store
 }
@@ -25,9 +25,9 @@ fun getKeyStore(keystore: String, password: String): KeyStore {
 // not completely done
 fun getTLSClientSocket(store: KeyStore): SSLSocketFactory {
     val context: SSLContext = SSLContext.getInstance("TLS");
-    val kmf : KeyManagerFactory = KeyManagerFactory.getInstance("X509");
-    kmf.init(store);
-    context.init(kmf.keyManagers);
+    val tmf : TrustManagerFactory = TrustManagerFactory.getInstance("PKIX")
+    tmf.init(store)
+    context.init(null, tmf.trustManagers, null);
     return context.socketFactory
 }
 
@@ -35,11 +35,12 @@ fun getTLSClientSocket(store: KeyStore): SSLSocketFactory {
 // should be done here
 fun getTLSServerSocket(store: KeyStore, password: String, port: Int): ServerSocket {
     val context: SSLContext = SSLContext.getInstance("TLS");
-    val kmf : KeyManagerFactory = KeyManagerFactory.getInstance("X509");
-    val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-    tmf.init(store)
+    val kmf : KeyManagerFactory = KeyManagerFactory.getInstance("PKIX");
+    //val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+    //tmf.init(store)
     kmf.init(store, password.toCharArray())
-    context.init(kmf.keyManagers, tmf.trustManagers, SecureRandom())
+    //context.init(kmf.keyManagers, tmf.trustManagers, SecureRandom())
+    context.init(kmf.keyManagers, null, null);
     return context.serverSocketFactory.createServerSocket(port)
 }
 
