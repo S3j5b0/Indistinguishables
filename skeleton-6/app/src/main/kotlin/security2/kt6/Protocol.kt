@@ -163,9 +163,15 @@ class TrusteeProtocol {
         // Remember these Ints are still privacy-protected by the randomized response scheme.
         // You can find the encrypted answers in the list “commits”.
 
-        val privateKey = rsa.recoverPrivateKey(key);
-        val outcomes: List<Int> = commits.map{ String(rsa.decrypt(it, privateKey)).toInt() }
-        return outcomes
+        try {
+            val privateKey = rsa.recoverPrivateKey(key);
+            return  commits.map{ String(rsa.decrypt(it, privateKey)).toInt() }
+        } catch (e: java.security.spec.InvalidKeySpecException){
+
+            println("error getting privkeyu")
+        }
+
+        return listOf<Int>()
     }
     fun handleMessage(sock: Socket, field: BigInteger) {
         val inp = sock.getInputStream().bufferedReader()
