@@ -4,10 +4,12 @@ import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider
 import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
 import java.math.BigInteger
 import java.net.ServerSocket
+import java.security.KeyPair
 import java.security.Security
 
 class AdminServer {
 
+    private val rsa : RSA = RSA();
     private val admin: AdminProtocol
     private val sSock: ServerSocket
 
@@ -38,8 +40,9 @@ class AdminServer {
         // Initializing data for our protocol:
         // TODO: Generate RSA keypair here
         // ...
-        val pub: ByteArray // public key
-        val priv: ByteArray // private key
+        val keypair : KeyPair = rsa.generateKey(2048)
+        val pub: ByteArray = keypair.public.encoded; // public key
+        val priv: ByteArray = keypair.private.encoded;// private key
         println("RSA keys generated")
 
         // Generate a suitable prime field to hold the private key

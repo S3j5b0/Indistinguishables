@@ -22,7 +22,7 @@ fun getKeyStore(keystore: String, password: String): KeyStore {
 }
 
 // TODO: Get a TLS client socket for the given key store
-// not completely done
+// should be done
 fun getTLSClientSocket(store: KeyStore): SSLSocketFactory {
     val context: SSLContext = SSLContext.getInstance("TLS");
     val tmf : TrustManagerFactory = TrustManagerFactory.getInstance("PKIX")
