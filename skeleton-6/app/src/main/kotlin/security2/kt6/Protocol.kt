@@ -145,7 +145,7 @@ class TrusteeProtocol {
         shares.forEach { println("With index: ${it.idx}, secret: ${it.secret}") }
         // TODO: Try to recover the secret from the shares
         try {
-            val res: BigInteger = shamir.shamirRecoverSecret(BigInteger(getField(sock).toString()), shares);
+            val res: BigInteger = shamir.shamirRecoverSecret(field, shares);
             println("shamir result: " + Hex.toHexString(res.toByteArray()))
             // If successfull try to decrypt the users' answers
             val toSend = decryptAndEvaluate(res.toByteArray())
