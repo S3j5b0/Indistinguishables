@@ -11,6 +11,7 @@ import java.math.BigInteger
 import java.net.Socket
 
 private val shamir : Shamir = Shamir();
+private val rsa : RSA = RSA();
 
 /*
 Every communication between clients and servers will be wrapped
@@ -161,7 +162,9 @@ class TrusteeProtocol {
         // TODO: Use the private key to RSA-decrypt the users' answers and return a list of integers back
         // Remember these Ints are still privacy-protected by the randomized response scheme.
         // You can find the encrypted answers in the list “commits”.
-        val outcomes: List<Int> =
+
+        val privateKey = rsa.recoverPrivateKey(key);
+        val outcomes: List<Int> = commits.map{ String(rsa.decrypt(it, privateKey)).toInt() }
         return outcomes
     }
     fun handleMessage(sock: Socket, field: BigInteger) {
