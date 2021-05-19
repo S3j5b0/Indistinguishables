@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="security2.kt.AppTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-04-21T08:14:42" hostname="terra" time="1.341">
+  <properties/>
+  <testcase name="testShamirRecover" classname="security2.kt.AppTest" time="1.071"/>
+  <testcase name="testShamirSplit" classname="security2.kt.AppTest" time="0.242"/>
+  <testcase name="testEcbEncrypt" classname="security2.kt.AppTest" time="0.028"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

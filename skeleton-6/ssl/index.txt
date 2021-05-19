@@ -1,0 +1,1 @@
+V	310131154654Z		1000	unknown	/C=DK/ST=Hovedstaden/O=ITU/OU=CISAT/CN=Security 2 Intermediate CA Peter/emailAddress=schn@itu.dk
