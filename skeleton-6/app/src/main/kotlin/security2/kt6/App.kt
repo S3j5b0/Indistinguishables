@@ -6,18 +6,25 @@ import java.net.ServerSocket
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
 import java.security.KeyStore
+import javax.net.ssl.KeyManagerFactory
 
 data class Share(val idx: Int, val secret: BigInteger)
 
 // TODO: Get the corresponding keystore here
+// Should be done here
 fun getKeyStore(keystore: String, password: String): KeyStore {
-    val store: KeyStore
+    val store: KeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+    store.load(keystore.byteInputStream(), password.toCharArray())
     return store
 }
 
 // TODO: Get a TLS client socket for the given key store
+// not completely done
 fun getTLSClientSocket(store: KeyStore): SSLSocketFactory {
-    val context: SSLContext
+    val context: SSLContext = SSLContext.getInstance("TLS");
+    val kmf : KeyManagerFactory = KeyManagerFactory.getInstance("X509")
+    kmf.init(store);
+    context.init(kmf.keyManagers, );
     return context.socketFactory
 }
 
