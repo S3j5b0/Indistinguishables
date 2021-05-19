@@ -3,10 +3,13 @@ package security2.kt6
 import kotlinx.coroutines.*
 import java.math.BigInteger
 import java.net.ServerSocket
+import java.security.KeyStore
+import java.security.SecureRandom
+import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
-import java.security.KeyStore
-import javax.net.ssl.KeyManagerFactory
+import javax.net.ssl.TrustManagerFactory
+
 
 data class Share(val idx: Int, val secret: BigInteger)
 
@@ -22,15 +25,21 @@ fun getKeyStore(keystore: String, password: String): KeyStore {
 // not completely done
 fun getTLSClientSocket(store: KeyStore): SSLSocketFactory {
     val context: SSLContext = SSLContext.getInstance("TLS");
-    val kmf : KeyManagerFactory = KeyManagerFactory.getInstance("X509")
+    val kmf : KeyManagerFactory = KeyManagerFactory.getInstance("X509");
     kmf.init(store);
-    context.init(kmf.keyManagers, );
+    context.init(kmf.keyManagers);
     return context.socketFactory
 }
 
 // TODO: Get a TLS server socket for the given keystore/password and listen on the given port
+// should be done here
 fun getTLSServerSocket(store: KeyStore, password: String, port: Int): ServerSocket {
-    val context: SSLContext
+    val context: SSLContext = SSLContext.getInstance("TLS");
+    val kmf : KeyManagerFactory = KeyManagerFactory.getInstance("X509");
+    val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+    tmf.init(store)
+    kmf.init(store, password.toCharArray())
+    context.init(kmf.keyManagers, tmf.trustManagers, SecureRandom())
     return context.serverSocketFactory.createServerSocket(port)
 }
 
