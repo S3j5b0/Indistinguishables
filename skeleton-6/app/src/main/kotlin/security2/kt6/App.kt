@@ -1,8 +1,10 @@
 package security2.kt6
 
 import kotlinx.coroutines.*
+import java.io.FileInputStream
 import java.math.BigInteger
 import java.net.ServerSocket
+import java.nio.file.Paths
 import java.security.KeyStore
 import java.security.SecureRandom
 import javax.net.ssl.KeyManagerFactory
@@ -16,8 +18,11 @@ data class Share(val idx: Int, val secret: BigInteger)
 // TODO: Get the corresponding keystore here
 // Should be done here
 fun getKeyStore(keystore: String, password: String): KeyStore {
-    val store: KeyStore = KeyStore.getInstance("JKS");
-    store.load(keystore.byteInputStream(), password.toCharArray())
+    val store: KeyStore = KeyStore.getInstance("JKS")
+    val path = Paths.get("").toAbsolutePath().toString()
+    //"/home/carl/Documents/git/github/S3j5b0/Indistinguishables/skeleton-6/app/server.jks")
+    val file = FileInputStream(path + "/app/" + keystore);
+    store.load(file, password.toCharArray())
     return store
 }
 
