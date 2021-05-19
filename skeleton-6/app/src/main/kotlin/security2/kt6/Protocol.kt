@@ -10,6 +10,8 @@ import java.lang.Exception
 import java.math.BigInteger
 import java.net.Socket
 
+private val shamir : Shamir = Shamir();
+
 /*
 Every communication between clients and servers will be wrapped
 in these Message objects.
@@ -142,7 +144,7 @@ class TrusteeProtocol {
         shares.forEach { println("With index: ${it.idx}, secret: ${it.secret}") }
         // TODO: Try to recover the secret from the shares
         try {
-            val res: BigInteger
+            val res: BigInteger = shamir.shamirRecoverSecret(BigInteger(getField(sock).toString()), shares);
             println("shamir result: " + Hex.toHexString(res.toByteArray()))
             // If successfull try to decrypt the users' answers
             val toSend = decryptAndEvaluate(res.toByteArray())
@@ -159,7 +161,7 @@ class TrusteeProtocol {
         // TODO: Use the private key to RSA-decrypt the users' answers and return a list of integers back
         // Remember these Ints are still privacy-protected by the randomized response scheme.
         // You can find the encrypted answers in the list “commits”.
-        val outcomes: List<Int>
+        val outcomes: List<Int> =
         return outcomes
     }
     fun handleMessage(sock: Socket, field: BigInteger) {

@@ -30,6 +30,10 @@ class RSA {
         return KeyFactory.getInstance("RSA", "BCFIPS").generatePrivate(PKCS8EncodedKeySpec(key));
     }
 
+    fun recoverPublicKey(key: ByteArray): PublicKey {
+        return KeyFactory.getInstance("RSA", "BCFIPS").generatePublic(PKCS8EncodedKeySpec(key));
+    }
+
     fun encrypt(text: ByteArray, key: PublicKey): ByteArray {
         var cipherText: ByteArray? = null
         //

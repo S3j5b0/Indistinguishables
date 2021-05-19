@@ -10,6 +10,7 @@ import java.security.Security
 class AdminServer {
 
     private val rsa : RSA = RSA();
+    private val shamir : Shamir = Shamir();
     private val admin: AdminProtocol
     private val sSock: ServerSocket
 
@@ -48,11 +49,11 @@ class AdminServer {
         // Generate a suitable prime field to hold the private key
         println("Generating field")
         // TODO: Generate a suitable field here
-        val field: BigInteger
+        val field: BigInteger = shamir.genField();
         // Split the private key into 10 shares and allow reconstruction by 3 peers
         println("Splitting secret")
         // TODO: Split the private key into the shares
-        val shares: List<Share>
+        val shares: List<Share> = shamir.shamirSecretSplitter(10, 3, field, priv);
         // Add the shares, public key and field to the server
         admin = AdminProtocol(pub, shares, field)
     }
