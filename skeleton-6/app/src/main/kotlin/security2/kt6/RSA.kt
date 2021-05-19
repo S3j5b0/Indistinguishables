@@ -31,7 +31,8 @@ class RSA {
     }
 
     fun recoverPublicKey(key: ByteArray): PublicKey {
-        return KeyFactory.getInstance("RSA", "BCFIPS").generatePublic(PKCS8EncodedKeySpec(key));
+        println(key)
+        return KeyFactory.getInstance("RSA", "BCFIPS").generatePublic(X509EncodedKeySpec(key));//PKCS8EncodedKeySpec(key));
     }
 
     fun encrypt(text: ByteArray, key: PublicKey): ByteArray {

@@ -46,7 +46,9 @@ fun runUser() {
     println("Sending answer: $diffPrivacyAnswer")
 
     // TODO: RSA-encrypt the diffPrivacyAnswer (Use RSA with ECB mode and PKCS1Padding)
-    val toSubmit: ByteArray = rsa.encrypt(diffPrivacyAnswer.toString().toByteArray(), rsa.recoverPublicKey(pubKeyBytes))
+    val pu = rsa.recoverPublicKey(pubKeyBytes)
+    println(pu)
+    val toSubmit: ByteArray = rsa.encrypt(diffPrivacyAnswer.toString().toByteArray(), pu)
     println("Encrypted answer: ${Hex.toHexString(toSubmit)}")
 
     // Submit the encrypted result to the trustee server
